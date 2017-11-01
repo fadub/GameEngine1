@@ -17,6 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
-	<classpathentry kind="lib" path="lwjgl-docs-2.9.3.zip"/>
+	<classpathentry kind="lib" path="E:/eclipse_projects/GameEngine1/javadoc/lwjgl-docs-2.9.3.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
