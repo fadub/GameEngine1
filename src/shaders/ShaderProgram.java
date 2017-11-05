@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.util.Log;
 
 public abstract class ShaderProgram {
 	private int programID;
@@ -27,13 +26,7 @@ public abstract class ShaderProgram {
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
-		getAllUniFormLocations();
-	}
-	
-	protected abstract void getAllUniFormLocations();
-	
-	protected int getUniformLocation(String uniformName) {
-		return GL20.glGetUniformLocation(programID, uniformName);
+		getAllUniformLocations();
 	}
 	
 	public void start() {
@@ -51,6 +44,12 @@ public abstract class ShaderProgram {
 		GL20.glDeleteShader(vertexShaderID);
 		GL20.glDeleteShader(fragmentShaderID);
 		GL20.glDeleteProgram(programID);
+	}
+	
+	protected abstract void getAllUniformLocations();
+	
+	protected int getUniformLocation(String uniformName) {
+		return GL20.glGetUniformLocation(programID, uniformName);
 	}
 	
 	protected abstract void bindAttributes();

@@ -13,7 +13,7 @@ import renderEngine.Loader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
 
-public class MainGameLoop {
+public class MainGameLoop_tut7 {
 
 	public static void main(String[] args) {
 
@@ -22,83 +22,23 @@ public class MainGameLoop {
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
 		
-		float[] vertices = {			
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,0.5f,-0.5f,		
-				
-				-0.5f,0.5f,0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				0.5f,0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				-0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,0.5f,
-				-0.5f,0.5f,-0.5f,
-				0.5f,0.5f,-0.5f,
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,-0.5f,0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,0.5f
-				
-		};
-		
-		float[] textureCoords = {
-				
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0
-
-				
+		float[] vertices = { 
+				-0.5f, 0.5f, 0,		// V0
+				-0.5f, -0.5f, 0,	// V1
+				0.5f, -0.5f, 0,		// V2
+				0.5f, 0.5f, 0		// V3
 		};
 		
 		int[] indices = {
-				0,1,3,	
-				3,1,2,	
-				4,5,7,
-				7,5,6,
-				8,9,11,
-				11,9,10,
-				12,13,15,
-				15,13,14,	
-				16,17,19,
-				19,17,18,
-				20,21,23,
-				23,21,22
-
+				0,1,3,	// Top left triangle (V0, V1, V3)
+				3,1,2	// Bottom right triangle (V3, V1, V2)
+		};
+		
+		float[] textureCoords = {
+				0,0,	// V0
+				0,1,	// V1
+				1,1,	// V2
+				1,0		// V3
 		};
 		 
 		RawModel model = loader.loadToVAO(vertices, indices, textureCoords);
@@ -108,7 +48,10 @@ public class MainGameLoop {
 		Camera camera = new Camera();
 		
 		while(!Display.isCloseRequested()) {
-			entity.increaseRotation(0.5f, 0, 0.5f);
+//			if(entity.getPosition().z < -2) {
+//				entity.increasePosition(0, 0, 0.05f);
+//				entity.increaseRotation(0, 0, (float)Math.random()*5);
+//			}
 			camera.move();
 			renderer.prepare();
 			shader.start();
