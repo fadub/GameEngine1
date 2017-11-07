@@ -12,12 +12,15 @@ import entities.Entity;
 import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 public class MainGameLoop {
 
@@ -26,8 +29,23 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
+		//*********TERRAIN TEXTURE STUFF*********
+		
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("myBlendMap"));
+		
+		//***************************************
+		
+		ModelData data;
+		
 		// object1: set up textured model
-		RawModel object1_model = OBJLoader.loadObjModel("lowPolyTree", loader);
+		data = OBJFileLoader.loadOBJ("lowPolyTree");
+		RawModel object1_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		ModelTexture object1_texture = new ModelTexture(loader.loadTexture("lowPolyTree"));
 		object1_texture.setShineDamper(10);
 		object1_texture.setReflectivity(1);
@@ -49,7 +67,8 @@ public class MainGameLoop {
 		}
 		
 		// object2: set up textured model
-		RawModel object2_model = OBJLoader.loadObjModel("fern", loader);
+		data = OBJFileLoader.loadOBJ("fern");
+		RawModel object2_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		ModelTexture object2_texture = new ModelTexture(loader.loadTexture("fern"));
 		object2_texture.setShineDamper(10);
 		object2_texture.setReflectivity(1);
@@ -73,7 +92,8 @@ public class MainGameLoop {
 		}
 		
 		// object3: set up textured model
-		RawModel object3_model = OBJLoader.loadObjModel("grass", loader);
+		data = OBJFileLoader.loadOBJ("grass");
+		RawModel object3_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		ModelTexture object3_texture = new ModelTexture(loader.loadTexture("grass"));
 		object3_texture.setShineDamper(10);
 		object3_texture.setReflectivity(1);
@@ -97,7 +117,8 @@ public class MainGameLoop {
 		}
 		
 		// object4: set up textured model
-		RawModel object4_model = OBJLoader.loadObjModel("tree", loader);
+		data = OBJFileLoader.loadOBJ("tree");
+		RawModel object4_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 		ModelTexture object4_texture = new ModelTexture(loader.loadTexture("tree"));
 		object4_texture.setShineDamper(10);
 		object4_texture.setReflectivity(1);
@@ -121,10 +142,10 @@ public class MainGameLoop {
 		}
 		
 		ModelTexture terrainTexture = new ModelTexture(loader.loadTexture("grassTerrain"));
-		Terrain terrain = new Terrain(0, 0, loader, terrainTexture);
+		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 		
 		Light light = new Light(new Vector3f(200, 200, 200), new Vector3f(0.8f, 1.4f, 2f));
-		Camera camera = new Camera(new Vector3f(5, 5, 5), 0, 140);
+		Camera camera = new Camera(new Vector3f(150, 6, 500), 0, 0);
 		
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
