@@ -23,6 +23,7 @@ public class Camera {
 	}
 	
 	public void move() {
+		/*
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			position.z -= 1f;
 		}
@@ -53,6 +54,7 @@ public class Camera {
 		if(Keyboard.isKeyDown(Keyboard.KEY_V)) {
 			pitch += 1f;
 		}
+		*/
 	}
 
 	public Vector3f getPosition() {

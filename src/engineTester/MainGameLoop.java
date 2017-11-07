@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.ModelData;
@@ -29,7 +30,7 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
-		//*********TERRAIN TEXTURE STUFF*********
+		//********* TERRAIN TEXTURE STUFF *********
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -147,9 +148,23 @@ public class MainGameLoop {
 		Light light = new Light(new Vector3f(200, 200, 200), new Vector3f(0.8f, 1.4f, 2f));
 		Camera camera = new Camera(new Vector3f(150, 6, 500), 0, 0);
 		
+		// player
+		data = OBJFileLoader.loadOBJ("player");
+		RawModel player_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+		ModelTexture player_texture = new ModelTexture(loader.loadTexture("player"));
+		player_texture.setShineDamper(10);
+		player_texture.setReflectivity(1);
+		TexturedModel player_texturedModel = new TexturedModel(player_model, player_texture);
+		player_texturedModel.getTexture().setHasTransparancy(true);
+		player_texturedModel.getTexture().setUseFakeLighting(true);
+		Player player = new Player(player_texturedModel, new Vector3f(150, 0, 470), 0, 0, 0, 1);
+		
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
 			camera.move();
+			player.move();
+			
+			renderer.processEntity(player);
 			
 			renderer.processTerrain(terrain);
 			
@@ -168,6 +183,7 @@ public class MainGameLoop {
 			for(Entity object4 : object4s) {
 				renderer.processEntity(object4);
 			}
+			
 			
 			
 			renderer.render(light, camera);
