@@ -37,14 +37,16 @@ public class OBJLoader {
 			while(true) {
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
+				int index = 1;
+				
 				if(line.startsWith("v ")) {
-					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[index]), Float.parseFloat(currentLine[index+1]), Float.parseFloat(currentLine[index+2]));
 					vertices.add(vertex);
 				}else if(line.startsWith("vt ")) {
-					Vector2f texture = new Vector2f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]));
+					Vector2f texture = new Vector2f(Float.parseFloat(currentLine[index]), Float.parseFloat(currentLine[index+1]));
 					textures.add(texture);
 				}else if(line.startsWith("vn ")) {
-					Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
+					Vector3f normal = new Vector3f(Float.parseFloat(currentLine[index]), Float.parseFloat(currentLine[index+1]), Float.parseFloat(currentLine[index+2]));
 					normals.add(normal);
 				}else if(line.startsWith("f ")) {
 					texturesArray = new float[vertices.size() * 2];
@@ -59,9 +61,11 @@ public class OBJLoader {
 					continue;
 				}
 				String[] currentLine = line.split(" ");
-				String[] vertex1 = currentLine[1].split("/");
-				String[] vertex2 = currentLine[2].split("/");
-				String[] vertex3 = currentLine[3].split("/");
+				int index = 1;
+				
+				String[] vertex1 = currentLine[index].split("/");
+				String[] vertex2 = currentLine[index+1].split("/");
+				String[] vertex3 = currentLine[index+2].split("/");
 				
 				processVertex(vertex1, indices, textures, normals, texturesArray, normalsArray);
 				processVertex(vertex2, indices, textures, normals, texturesArray, normalsArray);
