@@ -2,7 +2,7 @@
 ### Quality: **prototyping**
 ### Year of creation: 2015
 
-## Scale
+## Scale of quality
 **professional**
 maintainable, scalable and performing -> well thought out architecture, clean structure, complete documentation
 
