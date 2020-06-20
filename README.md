@@ -15,7 +15,7 @@ maintainable -> clean structure, readable
 **hacky**
 just good enough to run
 
-# Function graphs
+# GameEngine1
 Primitive Game Engine I wrote using Java with OpenGL to learn about graphics programming.
 
 ![In-Game Screenshot](readme-img/first-opengl-gameengine.PNG)
