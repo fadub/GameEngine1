@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.util.Log;
 
 import entities.Camera;
 import entities.Entity;
@@ -35,12 +36,17 @@ public class MainGameLoop {
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
-		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path_hearts"));
 		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("myBlendMap"));
 		
 		//***************************************
+		
+		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
+		
+		Light light = new Light(new Vector3f(200, 200, 200), new Vector3f(0.8f, 1.4f, 2f));
+		
 		
 		ModelData data;
 		
@@ -57,8 +63,8 @@ public class MainGameLoop {
 		for(int i = 0; i < 100; i++) {
 			Random random = new Random();
 			float posX = (random.nextFloat() * 400 + 20);
-			float posY = 0;
 			float posZ = (random.nextFloat() * 400 + 20);
+			float posY = terrain.getHeightOfTerrain(posX, posZ);
 			float rotX = 0;
 			float rotY = (random.nextFloat() * 360 - 180);
 			float rotZ = 0;
@@ -82,8 +88,8 @@ public class MainGameLoop {
 		for(int i = 0; i < 50; i++) {
 			Random random = new Random();
 			float posX = (random.nextFloat() * 400 + 20);
-			float posY = 0;
 			float posZ = (random.nextFloat() * 400 + 20);
+			float posY = terrain.getHeightOfTerrain(posX, posZ);
 			float rotX = 0;
 			float rotY = (random.nextFloat() * 360 - 180);
 			float rotZ = 0;
@@ -93,9 +99,9 @@ public class MainGameLoop {
 		}
 		
 		// object3: set up textured model
-		data = OBJFileLoader.loadOBJ("grass");
+		data = OBJFileLoader.loadOBJ("Grass_Pack/Grass_01");
 		RawModel object3_model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
-		ModelTexture object3_texture = new ModelTexture(loader.loadTexture("grass"));
+		ModelTexture object3_texture = new ModelTexture(loader.loadTexture("green"));
 		object3_texture.setShineDamper(10);
 		object3_texture.setReflectivity(1);
 		TexturedModel object3_texturedModel = new TexturedModel(object3_model, object3_texture);
@@ -104,15 +110,15 @@ public class MainGameLoop {
 		
 		// object3: create entity list
 		List<Entity> object3s = new ArrayList<Entity>();
-		for(int i = 0; i < 50; i++) {
+		for(int i = 0; i < 300; i++) {
 			Random random = new Random();
 			float posX = (random.nextFloat() * 400 + 20);
-			float posY = 0;
 			float posZ = (random.nextFloat() * 400 + 20);
+			float posY = terrain.getHeightOfTerrain(posX, posZ);
 			float rotX = 0;
 			float rotY = (random.nextFloat() * 360 - 180);
 			float rotZ = 0;
-			float scale = random.nextFloat() * (2f - 1f) + 1f;
+			float scale = random.nextFloat() * (3f - 2f) + 2f;
 			Entity object3 = new Entity(object3_texturedModel, new Vector3f(posX, posY, posZ), rotX, rotY, rotZ, scale);
 			object3s.add(object3);
 		}
@@ -132,8 +138,8 @@ public class MainGameLoop {
 		for(int i = 0; i < 50; i++) {
 			Random random = new Random();
 			float posX = (random.nextFloat() * 400 + 20);
-			float posY = 0;
 			float posZ = (random.nextFloat() * 400 + 20);
+			float posY = terrain.getHeightOfTerrain(posX, posZ);
 			float rotX = 0;
 			float rotY = (random.nextFloat() * 360 - 180);
 			float rotZ = 0;
@@ -141,12 +147,6 @@ public class MainGameLoop {
 			Entity object4 = new Entity(object4_texturedModel, new Vector3f(posX, posY, posZ), rotX, rotY, rotZ, scale);
 			object4s.add(object4);
 		}
-		
-		ModelTexture terrainTexture = new ModelTexture(loader.loadTexture("grassTerrain"));
-		Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
-		
-		Light light = new Light(new Vector3f(200, 200, 200), new Vector3f(0.8f, 1.4f, 2f));
-		Camera camera = new Camera(new Vector3f(150, 6, 500), 0, 0);
 		
 		// player
 		data = OBJFileLoader.loadOBJ("player");
@@ -157,12 +157,14 @@ public class MainGameLoop {
 		TexturedModel player_texturedModel = new TexturedModel(player_model, player_texture);
 		player_texturedModel.getTexture().setHasTransparancy(true);
 		player_texturedModel.getTexture().setUseFakeLighting(true);
-		Player player = new Player(player_texturedModel, new Vector3f(150, 0, 470), 0, 0, 0, 1);
+		Player player = new Player(player_texturedModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		
+		Camera camera = new Camera(player);
 		
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()) {
 			camera.move();
-			player.move();
+			player.move(terrain);
 			
 			renderer.processEntity(player);
 			
